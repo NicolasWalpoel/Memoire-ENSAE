@@ -1,0 +1,14 @@
+{
+  "pair": "EUR/USD",
+  "atm_iv": 0.1,
+  "r_dom_guess": 0.0366,
+  "r_for_guess": 0.027250460862455694,
+  "spot": 1.1747,
+  "spot_date": null,
+  "timestamp": "2025-10-14T13:53:05.198728Z",
+  "sources": {
+    "usd_curve": "FRED Treasury (DGS*) fredgraph.csv",
+    "eur_curve": "FRED EUR proxies (EUR3MTD156N & IRLTLT01EZM156N) spread over USD curve",
+    "fx_spot": "FRED DEXUSEU fredgraph.csv"
+  }
+}
