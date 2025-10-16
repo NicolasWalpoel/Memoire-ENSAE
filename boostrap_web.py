@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Bootstrap EUR & USD curves and basic FX meta — no Yahoo, resilient to ECB fetch failures.
+Bootstrap EUR & USD curves and basic FX, resilient to ECB fetch failures.
 
-Data sources (no API keys):
+Data sources :
 - FRED fredgraph CSV: USD Treasuries (DGS*), FX DEXUSEU, EURIBOR 3M (EUR3MTD156N), USD 3M (DGS3MO/TB3MS),
   Euro Area 10Y gov yield from OECD via FRED (IRLTLT01EZM156N).
 - ECB quickview (optional, best-quality EUR curve). If ECB is unavailable, we synthesize the EUR curve
   by adding tenor-dependent EUR–USD spreads (anchored at 3M & 10Y) to the USD curve fetched from FRED.
 
-Outputs (compatible with your existing pipeline):
+Outputs :
   data/usd_curve.csv   -> columns: tenor_years, yield_dec
   data/eur_curve.csv   -> columns: tenor_years, yield_dec
   data/fx_meta.json    -> pair, atm_iv, r_dom_guess, r_for_guess, spot, spot_date, timestamp, sources
@@ -22,7 +22,7 @@ import pandas as pd
 import numpy as np
 
 # -------------------- CONFIG --------------------
-DATA_DIR = os.path.join(os.path.dirname(__file__), "/Users/walpoel/Desktop/taf sg/ensae final/data")
+DATA_DIR = os.path.join(os.path.dirname(__file__), "/data")
 PAIR = "EUR/USD"
 ASSUMED_ATM_IV = 0.10          # set to None if you prefer not to pass IV
 DEFAULT_CDS_BPS = 150.0        # simple proxy
