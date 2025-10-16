@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from math import log, sqrt
-from scipy.stats import norm  # if scipy not available in your env, swap by an approximation
+from scipy.stats import norm 
 
 # =====================
 # Model building blocks
