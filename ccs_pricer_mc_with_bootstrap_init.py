@@ -1,15 +1,11 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
-ccs_pricer_mc_with_bootstrap_init.py
-
 Purpose
 -------
 - Initialize all model inputs from your existing "adapter" (the file that scrapes/
   bootstraps market data). By default, this script tries to import
   `load_inputs_via_adapter` from `ccs_monte_carlo_from_bootstrap.py`, which in turn
   attempts to read your modules (e.g. boostrap_yahoo_direct, etc.).
-- Use the *full* CCS pricer from `ccs_pricer_full.py` to:
+
   • simulate joint FX + domestic/foreign short rates (Hull-White 1F + GK FX)
   • price ALL cashflows leg-by-leg along each simulated path and discount them
     consistently at each step
@@ -18,11 +14,9 @@ Purpose
 
 How to run
 ----------
-$ python ccs_pricer_mc_with_bootstrap_init.py
-
 This will:
 - Load market inputs from your adapter (with safe fallbacks if missing).
-- Build the pricer objects from `ccs_pricer_full.py`.
+- Build the pricer objects from `ccs_pricer_full_slim.py`.
 - Run a Monte Carlo and print the PV summary + plot the requested series.
 
 Notes
@@ -70,7 +64,7 @@ class UserCCSConfig:
     domestic_fixed_rate: float = 0.03   # used only if pay_fix=True
     domestic_float_spread: float = 0.00 # used only if pay_fix=False (added to floating index)
     domestic_exchange: str = "maturity" # "none" | "maturity" | "both"
-    domestic_daycount: str = "ACT/360"  # matches ccs_pricer_full DayCountBasis literals
+    domestic_daycount: str = "ACT/360"  # matches ccs_pricer_full_slim DayCountBasis literals
 
     # Foreign leg
     foreign_pay_fix: bool = False
@@ -79,7 +73,7 @@ class UserCCSConfig:
     foreign_exchange: str = "maturity"
     foreign_daycount: str = "ACT/360"
 
-    # Optional "leverage/spread" add-ons supported by ccs_pricer_full
+    # Optional "leverage/spread" add-ons supported by ccs_pricer_full_slim
     domestic_rate_multiplier: float = 1.0
     domestic_rate_spread_fixed: float = 0.0
     foreign_rate_multiplier: float = 1.0
@@ -140,7 +134,7 @@ def map_corr_from_adapter(corr_matrix_3x3: np.ndarray) -> Dict[Tuple[str, str], 
 
 def build_models_from_inputs(inputs: dict, cfg: UserCCSConfig):
     """
-    Convert adapter outputs to model objects used by ccs_pricer_full.
+    Convert adapter outputs to model objects used by ccs_pricer_full_slim.
     Expected `inputs` keys:
       - 'spot_fx' (float)
       - 'usd_zero_curve' (DataFrame: tenor_years, zero_rate)
