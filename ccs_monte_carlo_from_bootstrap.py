@@ -1,23 +1,20 @@
 # -*- coding: utf-8 -*-
 """
-ccs_monte_carlo_from_bootstrap.py (simplified)
-
-What it does
 ------------
 - Exposes:
     * interp_zero_rate(curve_df, t_years): linear interpolation on a zero curve DF
     * load_inputs_via_adapter(as_of=None, prefer_files=True): returns the minimal
       dict of inputs required by the slim/full CCS pricers
 
-Inputs it *can* read (optional)
+Inputs it can read
 -------------------------------
-If present in the *current working directory*, these files will be used:
+If present in the current working directory, these files will be used:
 - usd_zero_curve.csv : columns ['tenor_years','zero_rate']
 - eur_zero_curve.csv : columns ['tenor_years','zero_rate']
 - corr_matrix.csv    : 3x3 numeric CSV for the order [FX, USD, EUR]
 - spot_fx.txt        : a single number (domestic per foreign), e.g., 1.08
 
-If any are missing, robust **fallbacks** are used:
+If any are missing, we use:
 - Flat USD curve @ 3%, EUR curve @ 2%, tenors 0..30y
 - spot_fx = 1.08
 - vols: fx=12%, usd_rate=1%, eur_rate=1%
@@ -26,7 +23,6 @@ If any are missing, robust **fallbacks** are used:
       [0.20,   1,    -0.10],
       [-0.10, -0.10,  1   ] ]
 
-Returned dict keys
 ------------------
 'spot_fx' (float)
 'usd_zero_curve' (pd.DataFrame: tenor_years, zero_rate)
@@ -105,16 +101,16 @@ def load_inputs_via_adapter(as_of=None, prefer_files: bool = True) -> dict:
     usd_rate_vol = 0.01
     eur_rate_vol = 0.01
 
-    # 4) corr matrix in order [FX, USD, EUR]
+    # 4) corr matrix [FX, USD, EUR]
     corr_fallback = np.array([[1.0,  0.20, -0.10],
                               [0.20, 1.0,  -0.10],
                               [-0.10,-0.10, 1.0 ]], dtype=float)
     corr_matrix = _maybe_load_corr('corr_matrix.csv', corr_fallback)
 
     # 5) basis curve (optional, not used by slim pricer) — keep zeros for shape
-    basis_curve = usd_curve.copy()
-    basis_curve.rename(columns={'zero_rate': 'basis_bp'}, inplace=True)
-    basis_curve['basis_bp'] = 0.0
+    # basis_curve = usd_curve.copy()
+    # basis_curve.rename(columns={'zero_rate': 'basis_bp'}, inplace=True)
+    # basis_curve['basis_bp'] = 0.0
 
     return {
         'spot_fx': spot_fx,
@@ -129,7 +125,6 @@ def load_inputs_via_adapter(as_of=None, prefer_files: bool = True) -> dict:
 
 if __name__ == "__main__":
     d = load_inputs_via_adapter()
-    print("Adapter OK. Keys:", list(d.keys()))
     print("spot_fx:", d['spot_fx'])
     print("usd_zero_curve head:\n", d['usd_zero_curve'].head())
     print("eur_zero_curve head:\n", d['eur_zero_curve'].head())
